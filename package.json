@@ -2,13 +2,21 @@
   "name": "dhis2-visualizer",
   "version": "1.0.0",
   "private": true,
-  "workspaces": [
-    "packages/*"
-  ],
+  "workspaces": {
+    "nohoist": [
+      "@hisptz/dhis2-analytics",
+      "@dhis2/app-runtime"
+    ],
+    "packages": [
+      "packages/*"
+    ]
+  },
   "scripts": {
     "visualizer": "yarn workspace visualizer",
     "server": "yarn workspace server",
-    "dev:visualizer": "yarn visualizer dev"
+    "preview:visualizer": "yarn visualizer preview",
+    "dev:visualizer": "yarn visualizer dev",
+    "dev:server": "yarn server dev"
   },
   "devDependencies": {
     "lerna": "^6.6.0"

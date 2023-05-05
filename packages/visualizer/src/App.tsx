@@ -1,11 +1,11 @@
+import React, {useMemo} from "react";
 import {useParams} from "react-router-dom";
 import {useDataQuery} from "@dhis2/app-runtime";
-import {Visualization, VisualizationConfig} from "@hisptz/dhis2-analytics";
 import {camelCase, isEmpty, snakeCase} from "lodash";
 import {useElementSize} from "usehooks-ts";
-import {useMemo} from "react";
 import {CssReset} from "@dhis2/ui";
 
+const Visualization = React.lazy(() => import("@hisptz/dhis2-analytics").then(({Visualization}) => ({default: Visualization})))
 
 const visualizationQuery = {
     vis: {
@@ -53,7 +53,7 @@ function getChartType(type: string): string {
     return type.toLowerCase();
 }
 
-function getConfig(visualization: any): VisualizationConfig {
+function getConfig(visualization: any) {
     const type = getDefaultType(visualization);
     const layout = getLayout(visualization);
 
@@ -111,7 +111,7 @@ function getOrgUnits(visualization: any) {
     return userOrgUnits;
 }
 
-function getCategoryOptions(visualization: any) {
+function getCategoryOptions() {
     return []
 }
 
@@ -154,7 +154,7 @@ function App() {
                     dx: getDataItems(visualization),
                     pe: getPeriods(visualization),
                     ou: getOrgUnits(visualization),
-                    co: getCategoryOptions(visualization)
+                    co: getCategoryOptions()
                 }}
                 config={getConfig(visualization)}
             />
