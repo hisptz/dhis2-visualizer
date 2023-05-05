@@ -1,7 +1,7 @@
 import {useParams} from "react-router-dom";
 import {useDataQuery} from "@dhis2/app-runtime";
 import {Visualization, VisualizationConfig} from "@hisptz/dhis2-analytics";
-import {isEmpty, snakeCase} from "lodash";
+import {camelCase, isEmpty, snakeCase} from "lodash";
 import {useElementSize} from "usehooks-ts";
 import {useMemo} from "react";
 import {CssReset} from "@dhis2/ui";
@@ -15,6 +15,8 @@ const visualizationQuery = {
 }
 
 
+const supportedCharts = ['BAR', 'COLUMN', 'LINE', 'STACKED_COLUMN', 'PIE'];
+
 function getLayout(visualization: any) {
     return {
         rows: visualization.rows.map((row: any) => row.id),
@@ -24,13 +26,32 @@ function getLayout(visualization: any) {
 }
 
 function getDefaultType(visualization: any) {
-    if (['BAR', 'COLUMN', 'LINE'].includes(visualization.type)) {
+    if (supportedCharts.includes(visualization.type)) {
         return 'chart'
+    }
+
+    if (['PIVOT_TABLE'].includes(visualization.type)) {
+        return 'pivotTable'
+    }
+
+    if (['MAP'].includes(visualization.type)) {
+        return 'map'
     }
 
     return visualization.type;
 }
 
+
+function getChartType(type: string): string {
+    if (['BAR', 'COLUMN'].includes(type)) {
+        return 'column'
+    }
+    if (['STACKED_COLUMN'].includes(type)) {
+        return 'stacked-column'
+    }
+
+    return type.toLowerCase();
+}
 
 function getConfig(visualization: any): VisualizationConfig {
     const type = getDefaultType(visualization);
@@ -40,7 +61,7 @@ function getConfig(visualization: any): VisualizationConfig {
         case "chart":
             return {
                 chart: {
-                    type: ['BAR', 'COLUMN'].includes(visualization.type) ? 'column' : visualization.type.toLowerCase(),
+                    type: getChartType(visualization.type),
                     layout: {
                         filter: layout.filters,
                         series: layout.columns,
@@ -48,12 +69,20 @@ function getConfig(visualization: any): VisualizationConfig {
                     }
                 }
             }
+        case "pivotTable":
+            return {
+                pivotTable: {
+                    fixColumnHeaders: true,
+                    fixRowHeaders: true,
+
+                }
+            }
     }
 }
 
 
 function getDataItems(visualization: any) {
-    return visualization.dataDimensionItems.map((item: any) => item.indicator.id);
+    return visualization.dataDimensionItems.map((item: any) => item[camelCase(item.dataDimensionItemType)].id);
 }
 
 function getPeriods(visualization: any) {
@@ -106,9 +135,7 @@ function App() {
         return <div>Error getting visualization</div>
     }
 
-    console.log({
-        height
-    });
+    console.log(data?.vis)
 
     return (
         <div ref={ref} style={{
