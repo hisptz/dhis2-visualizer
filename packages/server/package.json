@@ -1,0 +1,8 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "A simple server to return an image of requested DHIS2 visualization",
+  "main": "index.js",
+  "license": "MIT",
+  "private": true
+}
