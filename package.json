@@ -5,6 +5,11 @@
   "workspaces": [
     "packages/*"
   ],
+  "scripts": {
+    "visualizer": "yarn workspace visualizer",
+    "server": "yarn workspace server",
+    "dev:visualizer": "yarn visualizer dev"
+  },
   "devDependencies": {
     "lerna": "^6.6.0"
   }
