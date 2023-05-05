@@ -135,10 +135,8 @@ function App() {
         return <div>Error getting visualization</div>
     }
 
-    console.log(data?.vis)
-
     return (
-        <div ref={ref} style={{
+        <div id={'visualization'} ref={ref} style={{
             display: 'flex',
             flexDirection: 'column',
             height: '100%',
