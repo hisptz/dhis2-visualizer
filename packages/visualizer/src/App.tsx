@@ -131,8 +131,8 @@ function App() {
         console.log('Loading...')
     }
 
-    if (!data?.vis) {
-        return <div>Error getting visualization</div>
+    if (!visualization) {
+        return null;
     }
 
     return (

@@ -23,7 +23,7 @@ export async function getImage(id: string): Promise<string> {
     const imageBuffer = await page?.screenshot() as Buffer;
     await browser.close();
     if (imageBuffer) {
-        return imageBuffer.toString('base64');
+        return `data:image/png;base64,${imageBuffer.toString('base64')}`;
     }
 
     return '';
