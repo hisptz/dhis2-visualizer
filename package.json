@@ -12,9 +12,11 @@
     ]
   },
   "scripts": {
+    "start": "",
     "visualizer": "yarn workspace visualizer",
     "server": "yarn workspace server",
     "build:visualizer": "yarn visualizer build",
+    "build:server": "yarn server build",
     "preview:visualizer": "yarn visualizer preview",
     "dev:visualizer": "yarn visualizer dev",
     "dev:server": "yarn server dev"
