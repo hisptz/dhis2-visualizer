@@ -24,7 +24,8 @@ router.get("/:id", async (req, res) => {
             image
         })
     } catch (e) {
-        res.json(e)
+        res.json(e);
+        console.error(e)
     }
 })
 

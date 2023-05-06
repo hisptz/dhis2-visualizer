@@ -5,7 +5,8 @@ export async function getImage(id: string): Promise<string> {
     const browser = await puppeteer.launch({
         headless: "new",
         args: [
-            '--no-sandbox'
+            '--no-sandbox',
+            '--disable-web-security',
         ],
         defaultViewport: {
             width: 1920,
@@ -14,7 +15,7 @@ export async function getImage(id: string): Promise<string> {
     });
     const page = await browser.newPage();
 
-    await page.goto(`http://localhost:3000/${id}`);
+    await page.goto(`http://localhost:5000/${id}`);
     await Promise.race([
         page.waitForSelector(".highcharts-container", {visible: true, timeout: 20000}),
         page.waitForSelector('.tablescrollbox', {visible: true, timeout: 20000})
@@ -25,6 +26,5 @@ export async function getImage(id: string): Promise<string> {
     if (imageBuffer) {
         return `data:image/png;base64,${imageBuffer.toString('base64')}`;
     }
-
     return '';
 }
