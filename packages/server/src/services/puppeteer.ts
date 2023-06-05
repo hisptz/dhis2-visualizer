@@ -7,6 +7,7 @@ export async function getImage(id: string): Promise<string> {
         args: [
             '--no-sandbox',
             '--disable-web-security',
+            '--disable-setuid-sandbox'
         ],
         defaultViewport: {
             width: 1920,

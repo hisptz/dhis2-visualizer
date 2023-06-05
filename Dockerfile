@@ -1,14 +1,12 @@
 FROM node:16.16
 LABEL authors="HISP Tanzania"
 
-ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
-
 WORKDIR /dhis2-visualizer
 
-COPY packages/visualizer/dist /dhis2-visualizer/visualizer
-COPY packages/server/app /dhis2-visualizer/app
-COPY packages/server/package.json /dhis2-visualizer/
-COPY yarn.lock /dhis2-visualizer/
+COPY app /dhis2-visualizer/app
+COPY visualizer /dhis2-visualizer/visualizer
+COPY package.json /dhis2-visualizer
+COPY yarn.lock /dhis2-visualizer
 
 
 RUN apt-get update && apt-get install gnupg wget -y && \
