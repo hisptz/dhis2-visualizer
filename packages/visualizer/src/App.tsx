@@ -53,7 +53,7 @@ function getChartType(type: string): string {
     return type.toLowerCase();
 }
 
-function getConfig(visualization: any) {
+function getConfig(visualization: any, {height}: { height: number }) {
     const type = getDefaultType(visualization);
     const layout = getLayout(visualization);
 
@@ -66,7 +66,29 @@ function getConfig(visualization: any) {
                         filter: layout.filters,
                         series: layout.columns,
                         category: layout.rows
-                    }
+                    },
+                    colors: [
+                        '#a8bf24',
+                        '#518cc3',
+                        '#d74554',
+                        '#ff9e21',
+                        '#968f8f',
+                        '#ba3ba1',
+                        '#ffda54',
+                        '#45beae',
+                        '#b98037',
+                        '#676767',
+                        '#6b2dd4',
+                        '#47792c',
+                        '#fcbdbd',
+                        '#830000',
+                        '#a5ffc0',
+                        '#000078',
+                        '#817c00',
+                        '#bdf023',
+                        '#fffac4',
+                    ],
+                    height
                 }
             }
         case "pivotTable":
@@ -135,26 +157,28 @@ function App() {
     }
 
     return (
-        <div id={'visualization'} ref={ref} style={{
+        <div id={'visualization'} style={{
             display: 'flex',
             flexDirection: 'column',
             height: '100%',
-            textAlign: "center"
+            textAlign: "center",
+            padding: 16
         }}>
             <CssReset/>
-            <h2>{visualization.displayName}</h2>
-            <Visualization
-                height={height}
-                layout={getLayout(visualization)}
-                defaultVisualizationType={getDefaultType(visualization)}
-                dimensions={{
-                    dx: getDataItems(visualization),
-                    pe: getPeriods(visualization),
-                    ou: getOrgUnits(visualization),
-                    co: getCategoryOptions()
-                }}
-                config={getConfig(visualization)}
-            />
+            <h2 style={{flexGrow: 0}}>{visualization.displayName}</h2>
+            <div ref={ref} style={{flexGrow: 1, height: '100%', width: "100%"}}>
+                <Visualization
+                    layout={getLayout(visualization)}
+                    defaultVisualizationType={getDefaultType(visualization)}
+                    dimensions={{
+                        dx: getDataItems(visualization),
+                        pe: getPeriods(visualization),
+                        ou: getOrgUnits(visualization),
+                        co: getCategoryOptions()
+                    }}
+                    config={getConfig(visualization, {height})}
+                />
+            </div>
         </div>
     )
 }
