@@ -15,11 +15,16 @@
     "visualizer": "yarn workspace visualizer",
     "server": "yarn workspace server",
     "build:visualizer": "yarn visualizer build",
+    "build:server": "yarn server build",
     "preview:visualizer": "yarn visualizer preview",
     "dev:visualizer": "yarn visualizer dev",
-    "dev:server": "yarn server dev"
+    "dev:server": "yarn server dev",
+    "build": "npx lerna run build",
+    "postbuild": "./postbuild.sh"
   },
   "devDependencies": {
-    "lerna": "^6.6.0"
+    "bestzip": "^2.2.1",
+    "lerna": "^6.6.0",
+    "rimraf": "^5.0.0"
   }
 }

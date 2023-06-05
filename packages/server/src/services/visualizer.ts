@@ -1,9 +1,10 @@
 import ChildProcess from "child_process";
+import path from "path"
 
 export function startApp() {
     console.log("Starting app...")
     return new Promise((resolve, reject) => {
-        const process = ChildProcess.exec(`npx serve -s ../visualizer/dist`, {}, (error, stdout, stderr) => {
+        const process = ChildProcess.exec(`npx serve -p 5000 -s ${path.resolve(`visualizer`)} `, {}, (error, stdout, stderr) => {
             console.info(stdout);
             console.info(error);
             console.info(stderr);

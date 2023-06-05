@@ -1,2 +1,6 @@
 node_modules/
 /packages/visualizer/.env
+/packages/server/app/
+/packages/server/.env
+/build/
+/app/

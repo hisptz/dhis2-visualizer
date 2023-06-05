@@ -80,7 +80,6 @@ function getConfig(visualization: any) {
     }
 }
 
-
 function getDataItems(visualization: any) {
     return visualization.dataDimensionItems.map((item: any) => item[camelCase(item.dataDimensionItemType)].id);
 }
