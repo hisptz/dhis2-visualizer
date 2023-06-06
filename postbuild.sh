@@ -1,4 +1,5 @@
 echo "Clearing past builds..."
+rimraf app
 rimraf build
 
 PKG_VERSION=`node -p "require('./package.json').version"`

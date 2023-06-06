@@ -4,6 +4,7 @@ import helmet from "helmet"
 import {startApp} from "./services/visualizer";
 import routes from "./routes";
 import proxy from "./services/proxy";
+import logger from "./logger";
 
 config()
 const port = process.env.PORT || 7000;
@@ -15,6 +16,7 @@ const app = express();
 
 
 app.use(express.json());
+// app.use(audit())
 app.use(helmet.contentSecurityPolicy({
     useDefaults: true
 }))
@@ -26,11 +28,10 @@ app.get(`${apiMountPoint}`, (req, res) => {
     res.send("Hello, Welcome to the DHIS2 image generator");
 })
 
-startApp().then(console.info);
-
+startApp().then(logger.info);
 app.listen(port, () => {
-    console.info(`Server started at ${port}`)
+    logger.info(`Server started at ${port}`)
     proxy.listen(proxyPort, () => {
-        console.info(`Proxy to ${proxyTarget} started at ${proxyPort}`);
+        logger.info(`Proxy to ${proxyTarget} started at ${proxyPort}`);
     })
 })

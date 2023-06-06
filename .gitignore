@@ -4,3 +4,4 @@ node_modules/
 /packages/server/.env
 /build/
 /app/
+/packages/server/logs/

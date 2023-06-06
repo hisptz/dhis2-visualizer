@@ -14,7 +14,6 @@ const visualizationQuery = {
     }
 }
 
-
 const supportedCharts = ['BAR', 'COLUMN', 'LINE', 'STACKED_COLUMN', 'PIE'];
 
 function getLayout(visualization: any) {
