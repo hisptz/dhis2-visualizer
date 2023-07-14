@@ -7,6 +7,8 @@ import logger from "./logger";
 import cacheMiddleware from "http-cache-middleware";
 import proxy from "./services/proxy";
 import compression from "compression";
+import RateLimit from "express-rate-limit"
+
 
 config()
 const port = process.env.PORT || 7000;
@@ -21,8 +23,14 @@ app.use(express.json());
 app.use(helmet.contentSecurityPolicy({
     useDefaults: true
 }))
+const limiter = RateLimit({
+    windowMs: 60 * 1000,
+    max: 100
+})
+app.use(limiter);
 app.use(cacheMiddleware())
 app.use(compression())
+
 
 app.use(`${apiMountPoint}/generate`, routes)
 
