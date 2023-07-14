@@ -2,10 +2,11 @@ echo "Clearing past builds..."
 rimraf app
 rimraf build
 
-PKG_VERSION=`node -p "require('./package.json').version"`
+PKG_VERSION=$(node -p "require('./package.json').version")
+PKG_NAME=$(node -p "require('./package.json').name")
 
 echo "Building app"
-BUNDLE_NAME="hisptz-dhis2-visualizer-$PKG_VERSION.zip"
+BUNDLE_NAME="$PKG_NAME-$PKG_VERSION.zip"
 
 mkdir app
 
