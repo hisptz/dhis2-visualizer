@@ -1,7 +1,7 @@
 import React, {useMemo} from "react";
 import {useParams} from "react-router-dom";
 import {useDataQuery} from "@dhis2/app-runtime";
-import {camelCase, isEmpty, snakeCase} from "lodash";
+import {camelCase, fromPairs, isEmpty, snakeCase} from "lodash";
 import {useElementSize} from "usehooks-ts";
 import {CssReset} from "@dhis2/ui";
 
@@ -131,8 +131,24 @@ function getOrgUnits(visualization: any) {
     return userOrgUnits;
 }
 
-function getCategoryOptions() {
-    return []
+function getCategoryOptions(visualization: any) {
+    if (visualization.categoryDimensions) {
+        return fromPairs(visualization.categoryDimensions.map(({
+                                                                   category,
+                                                                   categoryOptions
+                                                               }: any) => ([category.id, categoryOptions.map((option: any) => option.id)])))
+    }
+    return {}
+}
+
+function getOrganisationUnitGroupSetDimensions(visualization: any) {
+    if (visualization.organisationUnitGroupSetDimensions) {
+        return fromPairs(visualization.organisationUnitGroupSetDimensions.map(({
+                                                                                   organisationUnitGroupSet,
+                                                                                   organisationUnitGroups
+                                                                               }: any) => ([organisationUnitGroupSet.id, organisationUnitGroups.map((option: any) => option.id)])))
+    }
+    return {}
 }
 
 function App() {
@@ -154,7 +170,6 @@ function App() {
     if (!visualization) {
         return null;
     }
-
     return (
         <div id={'visualization'} style={{
             display: 'flex',
@@ -173,7 +188,8 @@ function App() {
                         dx: getDataItems(visualization),
                         pe: getPeriods(visualization),
                         ou: getOrgUnits(visualization),
-                        co: getCategoryOptions()
+                        ...getCategoryOptions(visualization),
+                        ...getOrganisationUnitGroupSetDimensions(visualization)
                     }}
                     config={getConfig(visualization, {height})}
                 />
