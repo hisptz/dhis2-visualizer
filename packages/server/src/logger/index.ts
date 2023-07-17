@@ -1,7 +1,9 @@
 import winston, {format} from "winston";
 import {config} from "dotenv";
+import {sanitizeEnv} from "../utils/env";
 
 config();
+sanitizeEnv()
 const logger = winston.createLogger({
     format: format.combine(
         format.colorize(),

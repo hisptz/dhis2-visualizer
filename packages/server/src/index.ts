@@ -8,9 +8,11 @@ import cacheMiddleware from "http-cache-middleware";
 import proxy from "./services/proxy";
 import compression from "compression";
 import RateLimit from "express-rate-limit"
+import {sanitizeEnv} from "./utils/env";
 
 
-config()
+config();
+sanitizeEnv();
 const port = process.env.PORT || 7000;
 const apiMountPoint = process.env.API_MOUNT_POINT || "/api";
 const proxyTarget = process.env.DHIS2_MEDIATOR_URL ?? "http://mediator:3000/api";
