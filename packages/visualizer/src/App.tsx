@@ -42,13 +42,15 @@ function getDefaultType(visualization: any) {
 
 
 function getChartType(type: string): string {
-    if (['BAR', 'COLUMN'].includes(type)) {
+    if (['COLUMN'].includes(type)) {
         return 'column'
     }
     if (['STACKED_COLUMN'].includes(type)) {
         return 'stacked-column'
     }
-
+    if(['STACKED_BAR'].includes(type)){
+        return 'stacked-bar'
+    }
     return type.toLowerCase();
 }
 
@@ -106,7 +108,7 @@ function getDataItems(visualization: any) {
 }
 
 function getPeriods(visualization: any) {
-    const periods = visualization.periods;
+    const periods = visualization.periods.map(({id}: { id: string }) => id);
     const relativePeriods = Object.keys(visualization.relativePeriods).filter((key) => visualization.relativePeriods[key]);
     return [...periods, ...(relativePeriods.map(period => snakeCase(period).toUpperCase()))];
 }
@@ -131,11 +133,22 @@ function getOrgUnits(visualization: any) {
     return userOrgUnits;
 }
 
+function getCategoryOptionGroupSets(visualization: any){
+    if(visualization.categoryOptionGroupSetDimensions){
+        return fromPairs(visualization.categoryOptionGroupSetDimensions.map(({
+                                                                   categoryOptionGroupSet,
+                                                                   categoryOptionGroups,
+                                                               }: any) => ([categoryOptionGroupSet.id, categoryOptionGroups.map((option: any) => option.id)])))
+    }
+
+    return {}
+}
+
 function getCategoryOptions(visualization: any) {
     if (visualization.categoryDimensions) {
         return fromPairs(visualization.categoryDimensions.map(({
                                                                    category,
-                                                                   categoryOptions
+                                                                   categoryOptions,
                                                                }: any) => ([category.id, categoryOptions.map((option: any) => option.id)])))
     }
     return {}
@@ -161,6 +174,7 @@ function App() {
     const [ref, {height}] = useElementSize();
 
     const visualization = useMemo(() => data?.vis, [data]);
+
 
 
     if (loading) {
@@ -189,7 +203,8 @@ function App() {
                         pe: getPeriods(visualization),
                         ou: getOrgUnits(visualization),
                         ...getCategoryOptions(visualization),
-                        ...getOrganisationUnitGroupSetDimensions(visualization)
+                        ...getOrganisationUnitGroupSetDimensions(visualization),
+                        ...getCategoryOptionGroupSets(visualization)
                     }}
                     config={getConfig(visualization, {height})}
                 />
