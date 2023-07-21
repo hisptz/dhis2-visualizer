@@ -48,7 +48,6 @@ function getChartType(type: string): string {
     if (['STACKED_COLUMN'].includes(type)) {
         return 'stacked-column'
     }
-
     return type.toLowerCase();
 }
 
@@ -131,11 +130,23 @@ function getOrgUnits(visualization: any) {
     return userOrgUnits;
 }
 
+function getCategoryOptionGroupSets(visualization: any){
+    if(visualization.categoryOptionGroupSetDimensions){
+        console.log("why")
+        return fromPairs(visualization.categoryOptionGroupSetDimensions.map(({
+                                                                   categoryOptionGroupSet,
+                                                                   categoryOptionGroups,
+                                                               }: any) => ([categoryOptionGroupSet.id, categoryOptionGroups.map((option: any) => option.id)])))
+    }
+
+    return {}
+}
+
 function getCategoryOptions(visualization: any) {
     if (visualization.categoryDimensions) {
         return fromPairs(visualization.categoryDimensions.map(({
                                                                    category,
-                                                                   categoryOptions
+                                                                   categoryOptions,
                                                                }: any) => ([category.id, categoryOptions.map((option: any) => option.id)])))
     }
     return {}
@@ -161,6 +172,9 @@ function App() {
     const [ref, {height}] = useElementSize();
 
     const visualization = useMemo(() => data?.vis, [data]);
+
+    console.log(getCategoryOptionGroupSets(visualization))
+    console.log(visualization)
 
 
     if (loading) {
@@ -189,7 +203,8 @@ function App() {
                         pe: getPeriods(visualization),
                         ou: getOrgUnits(visualization),
                         ...getCategoryOptions(visualization),
-                        ...getOrganisationUnitGroupSetDimensions(visualization)
+                        ...getOrganisationUnitGroupSetDimensions(visualization),
+                        ...getCategoryOptionGroupSets(visualization)
                     }}
                     config={getConfig(visualization, {height})}
                 />
