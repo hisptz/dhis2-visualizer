@@ -108,7 +108,7 @@ function getDataItems(visualization: any) {
 }
 
 function getPeriods(visualization: any) {
-    const periods = visualization.periods;
+    const periods = visualization.periods.map(({id}: { id: string }) => id);
     const relativePeriods = Object.keys(visualization.relativePeriods).filter((key) => visualization.relativePeriods[key]);
     return [...periods, ...(relativePeriods.map(period => snakeCase(period).toUpperCase()))];
 }
