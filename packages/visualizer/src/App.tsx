@@ -42,11 +42,14 @@ function getDefaultType(visualization: any) {
 
 
 function getChartType(type: string): string {
-    if (['BAR', 'COLUMN'].includes(type)) {
+    if (['COLUMN'].includes(type)) {
         return 'column'
     }
     if (['STACKED_COLUMN'].includes(type)) {
         return 'stacked-column'
+    }
+    if(['STACKED_BAR'].includes(type)){
+        return 'stacked-bar'
     }
     return type.toLowerCase();
 }
@@ -132,7 +135,6 @@ function getOrgUnits(visualization: any) {
 
 function getCategoryOptionGroupSets(visualization: any){
     if(visualization.categoryOptionGroupSetDimensions){
-        console.log("why")
         return fromPairs(visualization.categoryOptionGroupSetDimensions.map(({
                                                                    categoryOptionGroupSet,
                                                                    categoryOptionGroups,
@@ -173,8 +175,6 @@ function App() {
 
     const visualization = useMemo(() => data?.vis, [data]);
 
-    console.log(getCategoryOptionGroupSets(visualization))
-    console.log(visualization)
 
 
     if (loading) {
