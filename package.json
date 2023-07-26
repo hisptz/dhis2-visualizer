@@ -1,6 +1,6 @@
 {
-  "name": "dhis2-visualizer",
-  "version": "1.0.0",
+  "name": "hisptz-dhis2-visualizer",
+  "version": "1.0.0-beta.00",
   "private": true,
   "workspaces": {
     "nohoist": [

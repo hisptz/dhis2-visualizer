@@ -1,7 +1,7 @@
 import React, {useMemo} from "react";
 import {useParams} from "react-router-dom";
 import {useDataQuery} from "@dhis2/app-runtime";
-import {camelCase, isEmpty, snakeCase} from "lodash";
+import {camelCase, fromPairs, isEmpty, snakeCase} from "lodash";
 import {useElementSize} from "usehooks-ts";
 import {CssReset} from "@dhis2/ui";
 
@@ -13,7 +13,6 @@ const visualizationQuery = {
         id: ({id}: any) => id,
     }
 }
-
 
 const supportedCharts = ['BAR', 'COLUMN', 'LINE', 'STACKED_COLUMN', 'PIE'];
 
@@ -43,17 +42,19 @@ function getDefaultType(visualization: any) {
 
 
 function getChartType(type: string): string {
-    if (['BAR', 'COLUMN'].includes(type)) {
+    if (['COLUMN'].includes(type)) {
         return 'column'
     }
     if (['STACKED_COLUMN'].includes(type)) {
         return 'stacked-column'
     }
-
+    if(['STACKED_BAR'].includes(type)){
+        return 'stacked-bar'
+    }
     return type.toLowerCase();
 }
 
-function getConfig(visualization: any) {
+function getConfig(visualization: any, {height}: { height: number }) {
     const type = getDefaultType(visualization);
     const layout = getLayout(visualization);
 
@@ -66,7 +67,29 @@ function getConfig(visualization: any) {
                         filter: layout.filters,
                         series: layout.columns,
                         category: layout.rows
-                    }
+                    },
+                    colors: [
+                        '#a8bf24',
+                        '#518cc3',
+                        '#d74554',
+                        '#ff9e21',
+                        '#968f8f',
+                        '#ba3ba1',
+                        '#ffda54',
+                        '#45beae',
+                        '#b98037',
+                        '#676767',
+                        '#6b2dd4',
+                        '#47792c',
+                        '#fcbdbd',
+                        '#830000',
+                        '#a5ffc0',
+                        '#000078',
+                        '#817c00',
+                        '#bdf023',
+                        '#fffac4',
+                    ],
+                    height
                 }
             }
         case "pivotTable":
@@ -85,7 +108,7 @@ function getDataItems(visualization: any) {
 }
 
 function getPeriods(visualization: any) {
-    const periods = visualization.periods;
+    const periods = visualization.periods.map(({id}: { id: string }) => id);
     const relativePeriods = Object.keys(visualization.relativePeriods).filter((key) => visualization.relativePeriods[key]);
     return [...periods, ...(relativePeriods.map(period => snakeCase(period).toUpperCase()))];
 }
@@ -110,8 +133,35 @@ function getOrgUnits(visualization: any) {
     return userOrgUnits;
 }
 
-function getCategoryOptions() {
-    return []
+function getCategoryOptionGroupSets(visualization: any){
+    if(visualization.categoryOptionGroupSetDimensions){
+        return fromPairs(visualization.categoryOptionGroupSetDimensions.map(({
+                                                                   categoryOptionGroupSet,
+                                                                   categoryOptionGroups,
+                                                               }: any) => ([categoryOptionGroupSet.id, categoryOptionGroups.map((option: any) => option.id)])))
+    }
+
+    return {}
+}
+
+function getCategoryOptions(visualization: any) {
+    if (visualization.categoryDimensions) {
+        return fromPairs(visualization.categoryDimensions.map(({
+                                                                   category,
+                                                                   categoryOptions,
+                                                               }: any) => ([category.id, categoryOptions.map((option: any) => option.id)])))
+    }
+    return {}
+}
+
+function getOrganisationUnitGroupSetDimensions(visualization: any) {
+    if (visualization.organisationUnitGroupSetDimensions) {
+        return fromPairs(visualization.organisationUnitGroupSetDimensions.map(({
+                                                                                   organisationUnitGroupSet,
+                                                                                   organisationUnitGroups
+                                                                               }: any) => ([organisationUnitGroupSet.id, organisationUnitGroups.map((option: any) => option.id)])))
+    }
+    return {}
 }
 
 function App() {
@@ -126,6 +176,7 @@ function App() {
     const visualization = useMemo(() => data?.vis, [data]);
 
 
+
     if (loading) {
         console.log('Loading...')
     }
@@ -133,28 +184,31 @@ function App() {
     if (!visualization) {
         return null;
     }
-
     return (
-        <div id={'visualization'} ref={ref} style={{
+        <div id={'visualization'} style={{
             display: 'flex',
             flexDirection: 'column',
             height: '100%',
-            textAlign: "center"
+            textAlign: "center",
+            padding: 16
         }}>
             <CssReset/>
-            <h2>{visualization.displayName}</h2>
-            <Visualization
-                height={height}
-                layout={getLayout(visualization)}
-                defaultVisualizationType={getDefaultType(visualization)}
-                dimensions={{
-                    dx: getDataItems(visualization),
-                    pe: getPeriods(visualization),
-                    ou: getOrgUnits(visualization),
-                    co: getCategoryOptions()
-                }}
-                config={getConfig(visualization)}
-            />
+            <h2 style={{flexGrow: 0}}>{visualization.displayName}</h2>
+            <div ref={ref} style={{flexGrow: 1, height: '100%', width: "100%"}}>
+                <Visualization
+                    layout={getLayout(visualization)}
+                    defaultVisualizationType={getDefaultType(visualization)}
+                    dimensions={{
+                        dx: getDataItems(visualization),
+                        pe: getPeriods(visualization),
+                        ou: getOrgUnits(visualization),
+                        ...getCategoryOptions(visualization),
+                        ...getOrganisationUnitGroupSetDimensions(visualization),
+                        ...getCategoryOptionGroupSets(visualization)
+                    }}
+                    config={getConfig(visualization, {height})}
+                />
+            </div>
         </div>
     )
 }

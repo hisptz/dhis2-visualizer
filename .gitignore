@@ -4,3 +4,5 @@ node_modules/
 /packages/server/.env
 /build/
 /app/
+/packages/server/logs/
+/packages/server/yarn-error.log
