@@ -5,6 +5,7 @@ import {camelCase, fromPairs, isEmpty, snakeCase} from "lodash";
 import {useElementSize} from "usehooks-ts";
 import {CssReset} from "@dhis2/ui";
 import {colorSets} from "./colors.ts";
+import Highcharts from 'highcharts'
 
 const Visualization = React.lazy(() => import("@hisptz/dhis2-analytics").then(({Visualization}) => ({default: Visualization})))
 
@@ -80,6 +81,7 @@ function getConfig(visualization: any, {height}: { height: number }) {
 				'#fffac4',
 		]
 		const layout = getLayout(visualization);
+		const sortOrder = visualization.sortOrder
 
 		switch (type) {
 				case "chart":
@@ -91,8 +93,28 @@ function getConfig(visualization: any, {height}: { height: number }) {
 												series: layout.columns,
 												category: layout.rows
 										},
+										highChartOverrides: (options: Highcharts.Options) => {
+												const series = options.series?.map((series) => {
+
+														return {
+																...series,
+																dataSorting: {
+																		enabled: sortOrder !== 0
+																},
+														}
+												});
+												return {
+														...options,
+														series,
+														xAxis: {
+																...options.xAxis,
+																reversed: sortOrder === -1
+														}
+												}
+										},
 										colors,
-										height
+										height,
+
 								}
 						}
 				case "pivotTable":
@@ -202,8 +224,6 @@ function App() {
 		if (!visualization) {
 				return null;
 		}
-
-		console.log(visualization)
 
 
 		return (
