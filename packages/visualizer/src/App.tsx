@@ -119,12 +119,18 @@ function getPeriods(visualization: any) {
 function getOrgUnits(visualization: any) {
 		const orgUnits = visualization.organisationUnits;
 		const orgUnitLevels = visualization.organisationUnitLevels;
+		const orgUnitGroups = visualization.itemOrganisationUnitGroups;
 		if (!isEmpty(orgUnits)) {
 				const orgUnitIds = orgUnits.map((orgUnit: any) => orgUnit.id);
 
 				if (!isEmpty(orgUnitLevels)) {
 						orgUnitLevels.forEach((level: number) => {
 								orgUnitIds.push(`LEVEL-${level}`)
+						})
+				}
+				if (!isEmpty(orgUnitGroups)) {
+						orgUnitGroups.forEach((group: { id: string }) => {
+								orgUnitIds.push(`OU_GROUP-${group.id}`)
 						})
 				}
 
