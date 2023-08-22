@@ -81,7 +81,8 @@ function getConfig(visualization: any, {height}: { height: number }) {
 				'#fffac4',
 		]
 		const layout = getLayout(visualization);
-		const sortOrder = visualization.sortOrder
+		const sortOrder = visualization.sortOrder;
+
 
 		switch (type) {
 				case "chart":
@@ -224,7 +225,6 @@ function App() {
 		if (!visualization) {
 				return null;
 		}
-
 
 		return (
 				<div id={'visualization'} style={{
