@@ -18,15 +18,35 @@ export async function getImage(id: string): Promise<string> {
     await page.goto(`http://localhost:5000/${id}`);
     try {
         await Promise.race([
-            page.waitForSelector(".highcharts-container", {visible: true, timeout: 20000,}),
-            page.waitForSelector("#error-container", {visible: true, timeout: 20000}),
-            page.waitForSelector('.tablescrollbox', {visible: true, timeout: 20000})
+            page.waitForSelector(".highcharts-container", {
+                visible: true,
+                timeout: 20000,
+            }),
+            page.waitForSelector("#error-container", {
+                visible: true,
+                timeout: 20000,
+            }),
+            page.waitForSelector(".tablescrollbox", {
+                visible: true,
+                timeout: 20000,
+            }),
+
+            page.waitForSelector('[data-test="visualization-container"]', {
+                visible: true,
+                timeout: 20000,
+            }),
         ]);
-        await page.waitForTimeout(3000);
-        const imageBuffer = await page?.screenshot() as Buffer;
+        await new Promise((r) => setTimeout(r, 2000)); //Due to highchart animation
+        const imageBuffer = (await page?.screenshot({
+            type: "jpeg",
+            quality: 100,
+            fullPage: true,
+            captureBeyondViewport: false,
+            fromSurface: true,
+        })) as Buffer;
         await browser.close();
         if (imageBuffer) {
-            return `data:image/png;base64,${imageBuffer.toString('base64')}`;
+            return `data:image/jpeg;base64,${imageBuffer.toString("base64")}`;
         }
     } catch (e) {
         const imageBuffer = await page?.screenshot() as Buffer;
