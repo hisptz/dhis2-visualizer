@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@dhis2/analytics": "^26.6.0",
-    "@dhis2/app-runtime": "^3.9.2",
+    "@dhis2/app-runtime": "^3.10.2",
     "@dhis2/d2-i18n": "^1.1.1",
     "@dhis2/ui": "^9.4.2",
     "@hisptz/dhis2-analytics": "^1.0.53",

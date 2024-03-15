@@ -1,4 +1,3 @@
-import {FetchError} from "@dhis2/app-runtime";
 
 export declare type JsonValue =
 		| boolean
@@ -60,7 +59,7 @@ export declare type QueryResult = JsonMap;
 export interface QueryOptions<TQueryResult = QueryResult> {
 		variables?: QueryVariables;
 		onComplete?: (data: TQueryResult) => void;
-		onError?: (error: FetchError) => void;
+		onError?: (error: any) => void;
 		lazy?: boolean;
 }
 
@@ -76,7 +75,7 @@ export interface QueryExecuteOptions {
 		variables?: QueryVariables;
 		signal?: AbortSignal;
 		onComplete?: (data: any) => void;
-		onError?: (error: FetchError) => void;
+		onError?: (error: any) => void;
 }
 
 export class InvalidQueryError extends Error {
