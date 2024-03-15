@@ -28,7 +28,6 @@ export function useVisualization(id?: string) {
 				queryFn: fetchData,
 		});
 }
-
 export function useVisualizationData(visualization: Record<string, any>) {
 		const client = useDHIS2Client();
 		const fetchLegendSets = async () => {

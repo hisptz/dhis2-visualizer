@@ -5,8 +5,6 @@ import {useVisualization} from "../../hooks/config";
 
 export function LegacyVisualizer() {
 		const {id} = useParams();
-
-		console.log(id);
 		const {isLoading, isError, data, error} = useVisualization(id);
 		if (isLoading) {
 				return <div>Loading...</div>;

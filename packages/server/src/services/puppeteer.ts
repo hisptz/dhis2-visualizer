@@ -15,6 +15,7 @@ export async function getImage(id: string): Promise<string> {
         }
     });
     const page = await browser.newPage();
+
     await page.goto(`http://localhost:5000/${id}`);
     try {
         await Promise.race([
