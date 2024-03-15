@@ -42,8 +42,8 @@ export function useVisualizationData(visualization: Record<string, any>) {
 		};
 		const fetchOrgUnitLevels = async () => {
 				const url = `/organisationUnitLevels?fields=*`;
-				const response = await client.get(url);
-				return response.data.organisationUnitLevels;
+				const response = await client.get<{ organisationUnitLevels: any[] }>(url);
+				return response.data.organisationUnitLevels ?? [];
 		};
 		const fetchData = async () => {
 				const disabledOptions = getDisabledOptions({
