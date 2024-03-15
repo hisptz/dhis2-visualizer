@@ -9,10 +9,6 @@ export async function getImage(id: string): Promise<string> {
             '--disable-web-security',
             '--disable-setuid-sandbox'
         ],
-        defaultViewport: {
-            width: 1920,
-            height: 1080
-        }
     });
     const page = await browser.newPage();
 
