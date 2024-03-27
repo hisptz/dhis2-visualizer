@@ -17,25 +17,30 @@ export async function getImage(id: string): Promise<string> {
 		const page = await browser.newPage();
 
 		await page.goto(`http://localhost:5000/${id}`);
-		await Promise.race([
+		const type = await Promise.race([
 				page.waitForSelector(".highcharts-container", {
 						visible: true,
 						timeout,
-				}),
+				}).then(() => 'chart'),
 				page.waitForSelector("#error-container", {
 						visible: true,
 						timeout,
-				}),
+				}).then(() => 'error'),
 				page.waitForSelector(".tablescrollbox", {
 						visible: true,
 						timeout,
-				}),
+				}).then(() => 'table'),
 
 				page.waitForSelector('[data-test="visualization-container"]', {
 						visible: true,
 						timeout,
-				}),
+				}).then(() => 'visualization-container'),
 		]);
+
+		if (type == 'error') {
+				throw new Error("Failed to load visualization");
+		}
+
 		await new Promise((r) => setTimeout(r, 2000)); //Due to highchart animation
 		const imageBuffer = (await page?.screenshot({
 				type: "jpeg",
