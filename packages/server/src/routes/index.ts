@@ -11,28 +11,30 @@ const cacheTime = process.env.CACHE_TIME ?? '1 hour'
 
 
 router.get("/", async (req, res) => {
-    res.status(400).json({
-        error: "Provide a visualization id"
-    })
+		res.status(400).json({
+				error: "Provide a visualization id"
+		})
 })
 router.get("/:id", async (req, res) => {
-    try {
-        const params: { id: string } = req.params as any;
-        const id = params.id as string;
-        res.setHeader('x-cache-timeout', cacheTime)
-        if (!id) {
-            res.status(400).json({
-                error: "Provide a visualization id"
-            })
-        }
-        const image = await getImage(id)
-        return res.json({
-            image
-        })
-    } catch (e) {
-        res.json(e);
-        console.error(e)
-    }
+		try {
+				const params: { id: string } = req.params as any;
+				const id = params.id as string;
+				res.setHeader('x-cache-timeout', cacheTime)
+				if (!id) {
+						res.status(400).json({
+								error: "Provide a visualization id"
+						})
+				}
+				const image = await getImage(id)
+				return res.json({
+						image
+				})
+		} catch (e) {
+				res.status(500).json({
+						error: e,
+				});
+				console.error(e)
+		}
 })
 
 
